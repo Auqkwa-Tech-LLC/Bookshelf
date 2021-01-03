@@ -73,7 +73,9 @@ public class BookshelfUtils {
         Inventory inv = null;
         String bsTitle = BookshelfManager.getTitle(loc);
         try {
-            inv = BookshelfUtils.fromBase64(hash, bsTitle);
+            if (bsTitle != null) {
+                inv = BookshelfUtils.fromBase64(hash, bsTitle);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,6 +103,10 @@ public class BookshelfUtils {
     }
 
     public static String locKey(Location loc) {
+        if(loc == null || loc.getWorld() == null){
+            throw new NullPointerException("Location is null!");
+        }
+
         return loc.getWorld().getName() + "_" + loc.getBlockX() + "_" + loc.getBlockY() + "_" + loc.getBlockZ();
     }
 
