@@ -383,19 +383,7 @@ public class Bookshelf extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Bookshelf] Loading bookshelves in spawn chunks in " + world.getName());
             loadBookshelfProgress();
             for (Chunk chunk : world.getLoadedChunks()) {
-                for (Block block : BookshelfUtils.getAllBookshelvesInChunk(chunk)) {
-                    String loc = BookshelfUtils.locKey(block.getLocation());
-                    if (!keyToContentMapping.containsKey(loc)) {
-                        if (!BookshelfManager.contains(loc)) {
-                            String bsTitle = Title;
-                            addBookshelfToMapping(loc, Bukkit.createInventory(null, BookShelfRows * 9, bsTitle));
-                            BookshelfManager.setTitle(loc, bsTitle);
-                            BookshelfUtils.saveBookShelf(loc);
-                        } else {
-                            BookshelfUtils.loadBookShelf(loc);
-                        }
-                    }
-                }
+                iteratingBookshelfs(chunk);
                 done++;
             }
             Bukkit.getConsoleSender().sendMessage("[Bookshelf] Preparing bookshelves in spawn chunks in " + currentWorld + ": 100%");
@@ -447,19 +435,7 @@ public class Bookshelf extends JavaPlugin {
             List<Chunk> remove = new ArrayList<>();
             int i = 1;
             for (Chunk chunk : bookshelfLoadPending) {
-                for (Block block : BookshelfUtils.getAllBookshelvesInChunk(chunk)) {
-                    String loc = BookshelfUtils.locKey(block.getLocation());
-                    if (!keyToContentMapping.containsKey(loc)) {
-                        if (!BookshelfManager.contains(loc)) {
-                            String bsTitle = Title;
-                            addBookshelfToMapping(loc, Bukkit.createInventory(null, BookShelfRows * 9, bsTitle));
-                            BookshelfManager.setTitle(loc, bsTitle);
-                            BookshelfUtils.saveBookShelf(loc);
-                        } else {
-                            BookshelfUtils.loadBookShelf(loc);
-                        }
-                    }
-                }
+                iteratingBookshelfs(chunk);
                 remove.add(chunk);
                 i++;
                 if (i > 2) {
@@ -470,6 +446,22 @@ public class Bookshelf extends JavaPlugin {
                 bookshelfLoadPending.remove(chunk);
             }
         }, 0, 1);
+    }
+
+    private static void iteratingBookshelfs(Chunk chunk) {
+        for (Block block : BookshelfUtils.getAllBookshelvesInChunk(chunk)) {
+            String loc = BookshelfUtils.locKey(block.getLocation());
+            if (!keyToContentMapping.containsKey(loc)) {
+                if (!BookshelfManager.contains(loc)) {
+                    String bsTitle = Title;
+                    addBookshelfToMapping(loc, Bukkit.createInventory(null, BookShelfRows * 9, bsTitle));
+                    BookshelfManager.setTitle(loc, bsTitle);
+                    BookshelfUtils.saveBookShelf(loc);
+                } else {
+                    BookshelfUtils.loadBookShelf(loc);
+                }
+            }
+        }
     }
 
     public void intervalRemove() {
@@ -504,58 +496,57 @@ public class Bookshelf extends JavaPlugin {
                     if (VanishUtils.isVanished(player)) {
                         continue;
                     }
-                    if (player.getOpenInventory() != null) {
-                        for (Entry<String, Inventory> entry : keyToContentMapping.entrySet()) {
-                            if (!isEmittingParticle.contains(entry.getKey())) {
-                                if (entry.getValue().equals(player.getOpenInventory().getTopInventory())) {
-                                    Location loc = BookshelfUtils.keyLoc(entry.getKey());
+                    player.getOpenInventory();
+                    for (Entry<String, Inventory> entry : keyToContentMapping.entrySet()) {
+                        if (!isEmittingParticle.contains(entry.getKey())) {
+                            if (entry.getValue().equals(player.getOpenInventory().getTopInventory())) {
+                                Location loc = BookshelfUtils.keyLoc(entry.getKey());
+                                Location loc2 = loc.clone().add(1, 1, 1);
+                                DustOptions purple = new DustOptions(Color.fromRGB(153, 51, 255), 1);
+                                DustOptions yellow = new DustOptions(Color.fromRGB(255, 255, 0), 1);
+                                for (Location pos : ParticlesUtils.getHollowCube(loc.add(-0.0625, -0.0625, -0.0625), loc2.add(0.0625, 0.0625, 0.0625), 0.1666)) {
+                                    double random = Math.random() * 100;
+                                    if (random > 95) {
+                                        double ranColor = Math.floor(Math.random() * 2) + 1;
+                                        if (ranColor == 1) {
+                                            loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, yellow);
+                                        } else if (ranColor == 2) {
+                                            loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, purple);
+                                        }
+                                    }
+                                }
+                                isEmittingParticle.add(entry.getKey());
+                            }
+                        }
+                    }
+                    if (enchantmentTable) {
+                        if (player.getOpenInventory().getTopInventory().getType().equals(InventoryType.ENCHANTING)) {
+                            for (Block block : EnchantmentTableUtils.getBookshelves(player.getOpenInventory().getTopInventory().getLocation().getBlock())) {
+                                String key = BookshelfUtils.locKey(block.getLocation());
+                                if (!isEmittingParticle.contains(key)) {
+                                    Location loc = block.getLocation().clone();
                                     Location loc2 = loc.clone().add(1, 1, 1);
-                                    DustOptions purple = new DustOptions(Color.fromRGB(153, 51, 255), 1);
-                                    DustOptions yellow = new DustOptions(Color.fromRGB(255, 255, 0), 1);
+                                    DustOptions purple = new DustOptions(Color.fromRGB(204, 0, 204), 1);
+                                    DustOptions blue = new DustOptions(Color.fromRGB(51, 51, 255), 1);
                                     for (Location pos : ParticlesUtils.getHollowCube(loc.add(-0.0625, -0.0625, -0.0625), loc2.add(0.0625, 0.0625, 0.0625), 0.1666)) {
                                         double random = Math.random() * 100;
                                         if (random > 95) {
                                             double ranColor = Math.floor(Math.random() * 2) + 1;
                                             if (ranColor == 1) {
-                                                loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, yellow);
+                                                loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, blue);
                                             } else if (ranColor == 2) {
                                                 loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, purple);
                                             }
                                         }
                                     }
-                                    isEmittingParticle.add(entry.getKey());
-                                }
-                            }
-                        }
-                        if (enchantmentTable) {
-                            if (player.getOpenInventory().getTopInventory().getType().equals(InventoryType.ENCHANTING)) {
-                                for (Block block : EnchantmentTableUtils.getBookshelves(player.getOpenInventory().getTopInventory().getLocation().getBlock())) {
-                                    String key = BookshelfUtils.locKey(block.getLocation());
-                                    if (!isEmittingParticle.contains(key)) {
-                                        Location loc = block.getLocation().clone();
-                                        Location loc2 = loc.clone().add(1, 1, 1);
-                                        DustOptions purple = new DustOptions(Color.fromRGB(204, 0, 204), 1);
-                                        DustOptions blue = new DustOptions(Color.fromRGB(51, 51, 255), 1);
-                                        for (Location pos : ParticlesUtils.getHollowCube(loc.add(-0.0625, -0.0625, -0.0625), loc2.add(0.0625, 0.0625, 0.0625), 0.1666)) {
-                                            double random = Math.random() * 100;
-                                            if (random > 95) {
-                                                double ranColor = Math.floor(Math.random() * 2) + 1;
-                                                if (ranColor == 1) {
-                                                    loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, blue);
-                                                } else if (ranColor == 2) {
-                                                    loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, purple);
-                                                }
-                                            }
-                                        }
-                                        isEmittingParticle.add(key);
-                                    }
-                                }
-                                String key = BookshelfUtils.locKey(player.getOpenInventory().getTopInventory().getLocation());
-                                if (!isEmittingParticle.contains(key)) {
-                                    Location pos = player.getOpenInventory().getTopInventory().getLocation().clone().add(0.5, 0.5, 0.5);
-                                    pos.getWorld().spawnParticle(Particle.PORTAL, pos, 75);
                                     isEmittingParticle.add(key);
                                 }
+                            }
+                            String key = BookshelfUtils.locKey(player.getOpenInventory().getTopInventory().getLocation());
+                            if (!isEmittingParticle.contains(key)) {
+                                Location pos = player.getOpenInventory().getTopInventory().getLocation().clone().add(0.5, 0.5, 0.5);
+                                pos.getWorld().spawnParticle(Particle.PORTAL, pos, 75);
+                                isEmittingParticle.add(key);
                             }
                         }
                     }

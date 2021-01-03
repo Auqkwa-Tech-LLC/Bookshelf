@@ -150,12 +150,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.plotsquared</groupId>
-			<artifactId>PlotSquared-Core</artifactId>
-			<version>5.13.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>world.bentobox</groupId>
 			<artifactId>bentobox</artifactId>
 			<version>1.14.2</version>
