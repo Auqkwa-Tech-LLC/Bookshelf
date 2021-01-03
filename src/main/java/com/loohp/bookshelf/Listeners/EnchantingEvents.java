@@ -143,7 +143,7 @@ public class EnchantingEvents implements Listener {
         Player player = event.getEnchanter();
         EnchantmentOffer[] offers = event.getOffers();
         for (EnchantmentOffer offer : offers) {
-            long seed = 0;
+            long seed;
             if (!Bookshelf.enchantSeed.containsKey(player)) {
                 Bookshelf.enchantSeed.put(player, System.currentTimeMillis());
             }

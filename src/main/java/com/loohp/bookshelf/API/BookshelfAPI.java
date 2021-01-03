@@ -24,10 +24,7 @@ public class BookshelfAPI {
     }
 
     public static boolean isBookshelf(Block block) {
-        if (block.getType().equals(Material.BOOKSHELF)) {
-            return true;
-        }
-        return false;
+        return block.getType().equals(Material.BOOKSHELF);
     }
 
     public static Block getPlayerOpeningBookshelf(Player player) {
@@ -130,32 +127,20 @@ public class BookshelfAPI {
 
     public static boolean isBookshelfInMemory(Location location) {
         String key = BookshelfUtils.locKey(location);
-        if (BookshelfManager.contains(key)) {
-            return true;
-        }
-        return false;
+        return BookshelfManager.contains(key);
     }
 
     public static boolean isBookshelfInMemory(String key) {
-        if (BookshelfManager.contains(key)) {
-            return true;
-        }
-        return false;
+        return BookshelfManager.contains(key);
     }
 
     public static boolean isBookshelfLoaded(Location location) {
         String key = BookshelfUtils.locKey(location);
-        if (Bookshelf.keyToContentMapping.containsKey(key)) {
-            return true;
-        }
-        return false;
+        return Bookshelf.keyToContentMapping.containsKey(key);
     }
 
     public static boolean isBookshelfLoaded(String key) {
-        if (Bookshelf.keyToContentMapping.containsKey(key)) {
-            return true;
-        }
-        return false;
+        return Bookshelf.keyToContentMapping.containsKey(key);
     }
 
     public static String convertLocationToKey(Location location) {

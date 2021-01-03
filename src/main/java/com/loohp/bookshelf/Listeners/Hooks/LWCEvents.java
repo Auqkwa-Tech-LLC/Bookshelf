@@ -42,9 +42,7 @@ public class LWCEvents implements Module {
             Protection protection = event.getProtection();
             if (LWC.getInstance().getPlugin().getLWC().canAccessProtection(player, protection) || !event.getAccess().equals(Access.NONE)) {
                 if (event.getProtection().getType().equals(Type.DONATION)) {
-                    if (!Bookshelf.isDonationView.contains(player.getUniqueId())) {
-                        Bookshelf.isDonationView.add(player.getUniqueId());
-                    }
+                    Bookshelf.isDonationView.add(player.getUniqueId());
                 }
 
                 PlayerOpenBookshelfEvent pobe = new PlayerOpenBookshelfEvent(player, loc, data.getBlockFace(), data.isCancelled());

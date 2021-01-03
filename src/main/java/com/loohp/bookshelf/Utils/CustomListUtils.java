@@ -1,5 +1,7 @@
 package com.loohp.bookshelf.Utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -11,7 +13,7 @@ public class CustomListUtils<T> implements Iterable<T> {
         this.original = original;
     }
 
-    public Iterator<T> iterator() {
+    public @NotNull Iterator<T> iterator() {
         final ListIterator<T> i = original.listIterator(original.size());
 
         return new Iterator<T>() {

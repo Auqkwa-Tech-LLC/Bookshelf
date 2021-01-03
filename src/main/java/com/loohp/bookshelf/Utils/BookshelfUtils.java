@@ -81,7 +81,7 @@ public class BookshelfUtils {
 
     public static void saveBookShelf(String loc, boolean remove) {
         Inventory inv = Bookshelf.keyToContentMapping.get(loc);
-        String hash = "";
+        String hash;
         hash = BookshelfUtils.toBase64(inv);
         BookshelfManager.setInventoryHash(loc, hash);
         if (loc == null || loc.equals("null")) {
@@ -97,8 +97,6 @@ public class BookshelfUtils {
         String hash;
         hash = BookshelfUtils.toBase64(inv);
         BookshelfManager.setInventoryHash(loc, hash);
-        if (loc == null || loc.equals("null")) {
-        }
     }
 
     public static String locKey(Location loc) {
@@ -107,9 +105,8 @@ public class BookshelfUtils {
 
     public static Location keyLoc(String key) {
         String[] breakdown = key.split("_");
-        String worldString = "";
-        List<String> list = new ArrayList<>();
-        list.addAll(Arrays.asList(breakdown).subList(0, (breakdown.length - 3)));
+        String worldString;
+        List<String> list = new ArrayList<>(Arrays.asList(breakdown).subList(0, (breakdown.length - 3)));
         worldString = String.join("_", list);
         World world = Bukkit.getWorld(worldString);
         int x = Integer.parseInt(breakdown[breakdown.length - 3]);
@@ -143,7 +140,7 @@ public class BookshelfUtils {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            Inventory inventory = null;
+            Inventory inventory;
             if (title.equals("")) {
                 inventory = Bukkit.getServer().createInventory(null, dataInput.readInt());
             } else {

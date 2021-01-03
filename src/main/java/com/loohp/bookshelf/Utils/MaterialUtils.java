@@ -32,9 +32,7 @@ public class MaterialUtils {
 
     public static <T> Set<T> convertListToSet(List<T> list) {
 
-        Set<T> set = new HashSet<>(list);
-
-        return set;
+        return new HashSet<>(list);
     }
 
 }

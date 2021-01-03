@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerCloseBookshelfEvent extends Event {
 
@@ -48,7 +49,7 @@ public class PlayerCloseBookshelfEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 

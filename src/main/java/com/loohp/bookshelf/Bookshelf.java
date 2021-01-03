@@ -349,7 +349,6 @@ public class Bookshelf extends JavaPlugin {
         Inventory inventory = keyToContentMapping.remove(key);
         if (inventory != null) {
             contentToKeyMapping.remove(inventory);
-        } else {
         }
     }
 

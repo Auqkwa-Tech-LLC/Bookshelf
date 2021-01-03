@@ -30,7 +30,7 @@ public class CreativeEvents implements Listener {
             Player player = (Player) event.getWhoClicked();
             ItemStack item = event.getCursor();
             if (item.getType().equals(Material.BOOKSHELF) && player.getGameMode().equals(GameMode.CREATIVE) && player.isSneaking() && player.hasPermission("bookshelf.copynbt")) {
-                Block block = null;
+                Block block;
                 if (Bookshelf.version.isNewerOrEqualTo(MCVersion.V1_14)) {
                     block = player.getTargetBlockExact(10, FluidCollisionMode.NEVER);
                 } else {

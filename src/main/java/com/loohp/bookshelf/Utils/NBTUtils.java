@@ -364,7 +364,7 @@ public final class NBTUtils {
      */
     public static String getTexture(ItemStack head) {
         ItemMeta meta = head.getItemMeta();
-        Field profileField = null;
+        Field profileField;
         try {
             profileField = meta.getClass().getDeclaredField("profile");
         } catch (NoSuchFieldException | SecurityException e) {
@@ -415,10 +415,10 @@ public final class NBTUtils {
             return null;
         }
         try {
-            Object stack = null;
+            Object stack;
             stack = getMethod("asNMSCopy").invoke(null, item);
 
-            Object tag = null;
+            Object tag;
 
             if (getMethod("hasTag").invoke(stack).equals(true)) {
                 tag = getMethod("getTag").invoke(stack);
@@ -445,7 +445,7 @@ public final class NBTUtils {
             return null;
         }
         try {
-            Object stack = null;
+            Object stack;
             stack = getMethod("asNMSCopy").invoke(null, item);
 
             Object tag = getNMSClass("NBTTagCompound").newInstance();
@@ -475,7 +475,7 @@ public final class NBTUtils {
         try {
             Object stack = getMethod("asNMSCopy").invoke(null, item);
 
-            Object tag = null;
+            Object tag;
 
             if (getMethod("hasTag").invoke(stack).equals(true)) {
                 tag = getMethod("getTag").invoke(stack);
@@ -1132,8 +1132,6 @@ public final class NBTUtils {
                 }
             }
         } else {
-            if (notCompound != null) {
-            }
         }
     }
 

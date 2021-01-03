@@ -10,6 +10,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerOpenBookshelfEvent extends Event implements Cancellable {
 
@@ -68,7 +69,7 @@ public class PlayerOpenBookshelfEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 
