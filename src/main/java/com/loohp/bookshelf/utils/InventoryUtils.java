@@ -1,4 +1,4 @@
-package com.loohp.bookshelf.Utils;
+package com.loohp.bookshelf.utils;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -6,6 +6,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class InventoryUtils {
+
+    private InventoryUtils() {
+    }
 
     public static boolean stillHaveSpace(Inventory inv, Material material) {
         int size = inv.getSize();

@@ -1,4 +1,4 @@
-package com.loohp.bookshelf.Listeners.Hooks;
+package com.loohp.bookshelf.listeners.hooks;
 
 import com.griefcraft.lwc.LWC;
 import com.griefcraft.model.Permission.Access;
@@ -6,9 +6,9 @@ import com.griefcraft.model.Protection;
 import com.griefcraft.model.Protection.Type;
 import com.griefcraft.scripting.Module;
 import com.griefcraft.scripting.event.*;
-import com.loohp.bookshelf.API.Events.PlayerOpenBookshelfEvent;
 import com.loohp.bookshelf.Bookshelf;
-import com.loohp.bookshelf.ObjectHolders.LWCRequestOpenData;
+import com.loohp.bookshelf.api.Events.PlayerOpenBookshelfEvent;
+import com.loohp.bookshelf.objectholders.LWCRequestOpenData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

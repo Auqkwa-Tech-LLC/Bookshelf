@@ -1,4 +1,4 @@
-package com.loohp.bookshelf.Utils.Legacy;
+package com.loohp.bookshelf.utils.Legacy;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,6 +15,9 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 public class LegacyConfigConverter {
+
+    private LegacyConfigConverter() {
+    }
 
     @SuppressWarnings("unchecked")
     @Deprecated
@@ -44,10 +47,11 @@ public class LegacyConfigConverter {
             String prettyJsonString = g.toJson(treeMap);
 
             File file = new File(Bookshelf.plugin.getDataFolder().getAbsolutePath() + "/bookshelfdata.json");
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
-            writer.write(prettyJsonString);
-            writer.flush();
-            writer.close();
+
+            try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
+                writer.write(prettyJsonString);
+                writer.flush();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }

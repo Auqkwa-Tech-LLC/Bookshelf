@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class EnchantmentOfferMapping {
 
+    private EnchantmentOfferMapping() {}
+
     public static final ConcurrentHashMap<Player, HashMap<ItemStack, EnchantmentOffer[]>> enchantOffers = new ConcurrentHashMap<>();
 
 }

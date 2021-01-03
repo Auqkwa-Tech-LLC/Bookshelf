@@ -1,4 +1,4 @@
-package com.loohp.bookshelf.Utils;
+package com.loohp.bookshelf.utils;
 
 import com.loohp.bookshelf.Bookshelf;
 import org.bukkit.*;
@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Map.Entry;
 
 public class HopperUtils {
+
+    private HopperUtils() {
+    }
 
     private static final HashMap<World, Long> PerWorldHopperTransferCurrentTick = new HashMap<>();
     private static final HashMap<World, Long> PerWorldHopperTransferSpeed = new HashMap<>();

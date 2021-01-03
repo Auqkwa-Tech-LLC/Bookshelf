@@ -1,7 +1,7 @@
-package com.loohp.bookshelf.Listeners.Hooks;
+package com.loohp.bookshelf.listeners.hooks;
 
-import com.loohp.bookshelf.API.Events.PlayerOpenBookshelfEvent;
 import com.loohp.bookshelf.Bookshelf;
+import com.loohp.bookshelf.api.Events.PlayerOpenBookshelfEvent;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import org.bukkit.Location;

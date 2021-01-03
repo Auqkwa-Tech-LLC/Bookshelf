@@ -1,10 +1,10 @@
-package com.loohp.bookshelf.Hooks;
+package com.loohp.bookshelf.hooks;
 
-import com.loohp.bookshelf.API.BookshelfAPI;
-import com.loohp.bookshelf.API.Events.PlayerCloseBookshelfEvent;
-import com.loohp.bookshelf.API.Events.PlayerOpenBookshelfEvent;
-import com.loohp.bookshelf.Utils.OpenInvUtils;
-import com.loohp.bookshelf.Utils.VanishUtils;
+import com.loohp.bookshelf.api.BookshelfAPI;
+import com.loohp.bookshelf.api.Events.PlayerCloseBookshelfEvent;
+import com.loohp.bookshelf.api.Events.PlayerOpenBookshelfEvent;
+import com.loohp.bookshelf.utils.OpenInvUtils;
+import com.loohp.bookshelf.utils.VanishUtils;
 import com.loohp.interactionvisualizer.EntityHolders.Item;
 import com.loohp.interactionvisualizer.InteractionVisualizer;
 import com.loohp.interactionvisualizer.Managers.PacketManager;

@@ -1,4 +1,4 @@
-package com.loohp.bookshelf.Utils;
+package com.loohp.bookshelf.utils;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnchantmentTableUtils {
+
+    private EnchantmentTableUtils() {
+    }
 
     public static List<Block> getBookshelves(Block enchantmentTableBlock) {
         List<Block> blocks = new ArrayList<>();
