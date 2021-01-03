@@ -19,6 +19,8 @@ import java.util.Map.Entry;
 
 public class HopperUtils {
 
+    //note If we want to make hoppers support, we need to rewrite that shit
+
     private HopperUtils() {
     }
 
@@ -214,7 +216,7 @@ public class HopperUtils {
             }
             long end = System.currentTimeMillis();
             long endNano = System.nanoTime();
-            //Bukkit.getConsoleSender().sendMessage("(" + (endNano - startNano) + "ns) / (" + (end - start) + "ms)");
+
             Bookshelf.lastHopperTime = endNano - startNano;
             if ((end - start) > 500) {
                 Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Bookshelf] Hopper Block Item Move Function took more than 500ms! (" + (end - start) + "ms)");

@@ -1,8 +1,6 @@
 package com.loohp.bookshelf;
 
-import com.loohp.bookshelf.Updater.Updater;
-import com.loohp.bookshelf.Updater.Updater.UpdaterResponse;
-import com.loohp.bookshelf.Utils.BaseUtil;
+import com.loohp.bookshelf.utils.BaseUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -23,7 +21,6 @@ public class Commands implements CommandExecutor, TabCompleter {
         }
 
         if (args.length < 1) {
-            sender.sendMessage(ChatColor.AQUA + "[Bookshelf] BookShelf written by LOOHP!");
             sender.sendMessage(ChatColor.GOLD + "[Bookshelf] You are running BookShelf version: " + Bookshelf.plugin.getDescription().getVersion());
             return true;
         }
@@ -34,29 +31,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                 Bookshelf.loadConfig();
                 sender.sendMessage(ChatColor.GREEN + "[Bookshelf] BookShelf has been reloaded!");
             } else {
-                sender.sendMessage(Bookshelf.NoPermissionToReloadMessage);
-            }
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("update")) {
-            if (sender.hasPermission("bookshelf.update")) {
-                sender.sendMessage(ChatColor.AQUA + "[Bookshelf] BookShelf written by LOOHP!");
-                sender.sendMessage(ChatColor.GOLD + "[Bookshelf] You are running BookShelf version: " + Bookshelf.plugin.getDescription().getVersion());
-                Bukkit.getScheduler().runTaskAsynchronously(Bookshelf.plugin, () -> {
-                    UpdaterResponse version = Updater.checkUpdate();
-                    if (version.getResult().equals("latest")) {
-                        if (version.isDevBuildLatest()) {
-                            sender.sendMessage(ChatColor.GREEN + "[Bookshelf] You are running the latest version!");
-                        } else {
-                            Updater.sendUpdateMessage(sender, version.getResult(), version.getSpigotPluginId(), true);
-                        }
-                    } else {
-                        Updater.sendUpdateMessage(sender, version.getResult(), version.getSpigotPluginId());
-                    }
-                });
-            } else {
-                sender.sendMessage(Bookshelf.NoPermissionToUpdateMessage);
+                sender.sendMessage(Bookshelf.youDoNotHavePermissionUseThisCommand);
             }
             return true;
         }

@@ -25,12 +25,14 @@ public class GriefPreventionEvents implements Listener {
             return;
         }
 
-        if (!GriefPrevention.instance.claimsEnabledForWorld(event.getLocation().getWorld())) {
+        GriefPrevention griefPrevention = GriefPrevention.instance;
+
+        if (!griefPrevention.claimsEnabledForWorld(event.getLocation().getWorld())) {
             return;
         }
 
         Location loc = event.getLocation();
-        Claim claim = GriefPrevention.instance.dataStore.getClaimAt(loc, false, null);
+        Claim claim = griefPrevention.dataStore.getClaimAt(loc, false, null);
 
         if (claim == null) {
             return;

@@ -1,19 +1,19 @@
 package com.loohp.bookshelf;
 
-import com.loohp.bookshelf.Hooks.InteractionVisualizerAnimations;
-import com.loohp.bookshelf.Listeners.*;
-import com.loohp.bookshelf.Listeners.Hooks.*;
-import com.loohp.bookshelf.Metrics.Charts;
-import com.loohp.bookshelf.Metrics.Metrics;
-import com.loohp.bookshelf.ObjectHolders.LWCRequestOpenData;
-import com.loohp.bookshelf.Updater.Updater;
-import com.loohp.bookshelf.Utils.*;
-import com.loohp.bookshelf.Utils.Legacy.LegacyConfigConverter;
+import com.loohp.bookshelf.hooks.InteractionVisualizerAnimations;
+import com.loohp.bookshelf.listeners.*;
+import com.loohp.bookshelf.listeners.hooks.*;
+import com.loohp.bookshelf.metrics.Charts;
+import com.loohp.bookshelf.metrics.Metrics;
+import com.loohp.bookshelf.objectholders.LWCRequestOpenData;
+import com.loohp.bookshelf.utils.*;
+import com.loohp.bookshelf.utils.Legacy.LegacyConfigConverter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -75,8 +75,8 @@ public class Bookshelf extends JavaPlugin {
     public static Set<String> Whitelist = new HashSet<>();
     public static boolean particlesEnabled = true;
 
-    public static String NoPermissionToReloadMessage = "&cYou do not have permission use this command!";
-    public static String NoPermissionToUpdateMessage = "&cYou do not have permission use this command!";
+    public static String youDoNotHavePermissionUseThisCommand = "&cYou do not have permission use this command!";
+    public static String noPermissionToUpdateMessage = "&cYou do not have permission use this command!";
 
     public static final Set<UUID> lwcCancelOpen = ConcurrentHashMap.newKeySet();
     public static final Set<UUID> isDonationView = ConcurrentHashMap.newKeySet();
@@ -98,9 +98,6 @@ public class Bookshelf extends JavaPlugin {
 
     public static int eTableMulti = 1;
 
-    public static boolean UpdaterEnabled = true;
-    public static final int UpdaterTaskID = -1;
-
     @Override
     @SuppressWarnings("deprecation")
     public void onEnable() {
@@ -118,8 +115,11 @@ public class Bookshelf extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EnchantingEvents(), this);
         getServer().getPluginManager().registerEvents(new PistonEvents(), this);
 
-        getCommand("bookshelf").setExecutor(new Commands());
+        PluginCommand bookshelf = getCommand("bookshelf");
 
+        if (bookshelf != null) {
+            bookshelf.setExecutor(new Commands());
+        }
         getConfig().options().copyDefaults(true);
         saveConfig();
 
@@ -231,15 +231,17 @@ public class Bookshelf extends JavaPlugin {
             LandHook = true;
         }
 
-        String PlotSquared = "PlotSquared";
-        if (getServer().getPluginManager().getPlugin(PlotSquared) != null) {
-            String plotSquaredVersion = getServer().getPluginManager().getPlugin(PlotSquared).getDescription().getVersion();
+        String plotSquaredName = "PlotSquared";
+        Plugin plotSquared = getServer().getPluginManager().getPlugin(plotSquaredName);
+
+        if (plotSquared != null) {
+            String plotSquaredVersion = plotSquared.getDescription().getVersion();
             if (plotSquaredVersion.startsWith("5.")) {
-                hookMessage(PlotSquared + " (v5)");
+                hookMessage(plotSquaredName + " (v5)");
                 getServer().getPluginManager().registerEvents(new PlotSquared5Events(), this);
                 PlotSquaredHook = true;
             } else if (plotSquaredVersion.startsWith("4.")) {
-                hookMessage(PlotSquared + " (v4)");
+                hookMessage(plotSquaredName + " (v4)");
                 getServer().getPluginManager().registerEvents(new PlotSquared4Events(), this);
                 PlotSquaredHook = true;
             } else {
@@ -258,12 +260,12 @@ public class Bookshelf extends JavaPlugin {
             getServer().getConsoleSender().sendMessage(ChatColor.RED + "[Bookshelf] This version of minecraft is unsupported!");
         }
 
-        if (plugin.getConfig().contains("Options.EnableHopperDropperSupport")) {
-            boolean setting = plugin.getConfig().getBoolean("Options.EnableHopperDropperSupport");
-            plugin.getConfig().set("Options.EnableHopperSupport", setting);
-            plugin.getConfig().set("Options.EnableDropperSupport", setting);
-            plugin.getConfig().set("Options.EnableHopperDropperSupport", null);
-            plugin.saveConfig();
+        if (Bookshelf.plugin.getConfig().contains("Options.EnableHopperDropperSupport")) {
+            boolean setting = Bookshelf.plugin.getConfig().getBoolean("Options.EnableHopperDropperSupport");
+            Bookshelf.plugin.getConfig().set("Options.EnableHopperSupport", setting);
+            Bookshelf.plugin.getConfig().set("Options.EnableDropperSupport", setting);
+            Bookshelf.plugin.getConfig().set("Options.EnableHopperDropperSupport", null);
+            Bookshelf.plugin.saveConfig();
         }
 
         loadConfig();
@@ -306,47 +308,44 @@ public class Bookshelf extends JavaPlugin {
         BookShelfRows = plugin.getConfig().getInt("Options.BookShelfRows");
         UseWhitelist = plugin.getConfig().getBoolean("Options.UseWhitelist");
         Whitelist = new HashSet<>(plugin.getConfig().getStringList("Options.Whitelist"));
-        Title = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Options.Title"));
-        NoPermissionToReloadMessage = plugin.getConfig().getString("Options.NoPermissionToReloadMessage");
-        NoPermissionToUpdateMessage = plugin.getConfig().getString("Options.NoPermissionToUpdateMessage");
+        Title = BaseUtil.fixColor(plugin.getConfig().getString("Options.Title"));
+        youDoNotHavePermissionUseThisCommand = plugin.getConfig().getString("Options.NoPermissionToReloadMessage");
+        noPermissionToUpdateMessage = plugin.getConfig().getString("Options.NoPermissionToUpdateMessage");
         particlesEnabled = plugin.getConfig().getBoolean("Options.ParticlesWhenOpened");
         EnableHopperSupport = plugin.getConfig().getBoolean("Options.EnableHopperSupport");
         EnableDropperSupport = plugin.getConfig().getBoolean("Options.EnableDropperSupport");
         enchantmentTable = plugin.getConfig().getBoolean("Options.EnableEnchantmentTableBoosting");
         int eTableChance = plugin.getConfig().getInt("Options.EnchantmentTableBoostingMaxPercentage");
+
         if (eTableChance > 100) {
             eTableChance = 100;
         } else if (eTableChance < 0) {
             eTableChance = 0;
         }
-        eTableMulti = (int) Math.pow(((double) eTableChance / 100.0), -1);
 
+        eTableMulti = (int) Math.pow(((double) eTableChance / 100.0), -1);
         lastHopperTime = 0;
         lastHoppercartTime = 0;
+
         if (HopperTaskID >= 0) {
             Bukkit.getScheduler().cancelTask(HopperTaskID);
         }
+
         if (HopperMinecartTaskID >= 0) {
             Bukkit.getScheduler().cancelTask(HopperMinecartTaskID);
         }
+
         if (EnableHopperSupport) {
             HopperTicksPerTransfer = Bukkit.spigot().getConfig().getInt("world-settings.default.ticks-per.hopper-transfer");
             HopperAmount = Bukkit.spigot().getConfig().getInt("world-settings.default.hopper-amount");
             HopperUtils.hopperCheck();
             HopperUtils.hopperMinecartCheck();
         }
-
-        if (UpdaterTaskID >= 0) {
-            Bukkit.getScheduler().cancelTask(UpdaterTaskID);
-        }
-        UpdaterEnabled = plugin.getConfig().getBoolean("Options.Updater");
-        if (UpdaterEnabled) {
-            Bukkit.getPluginManager().registerEvents(new Updater(), Bookshelf.plugin);
-        }
     }
 
     public static void removeBookshelfFromMapping(String key) {
         Inventory inventory = keyToContentMapping.remove(key);
+
         if (inventory != null) {
             contentToKeyMapping.remove(inventory);
         }
@@ -354,6 +353,7 @@ public class Bookshelf extends JavaPlugin {
 
     public static boolean removeBookshelfFromMapping(Inventory inventory) {
         String key = contentToKeyMapping.remove(inventory);
+
         if (key != null) {
             keyToContentMapping.remove(key);
             return true;
@@ -484,73 +484,92 @@ public class Bookshelf extends JavaPlugin {
         }, 0, 1);
     }
 
+
+    private final DustOptions purple = new DustOptions(Color.fromRGB(153, 51, 255), 1);
+    private final DustOptions yellow = new DustOptions(Color.fromRGB(255, 255, 0), 1);
+
+    private final DustOptions purpleEnchantment = new DustOptions(Color.fromRGB(204, 0, 204), 1);
+    private final DustOptions blueEnchantment = new DustOptions(Color.fromRGB(51, 51, 255), 1);
+
     public void particles() {
         Bukkit.getScheduler().runTaskTimer(this, () -> {
             if (particlesEnabled && version.isLegacy()) {
                 isEmittingParticle.clear();
+
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (OpenInvUtils.isSlientChest(player)) {
+                    if (OpenInvUtils.isSlientChest(player) || VanishUtils.isVanished(player)) {
                         continue;
                     }
-                    if (VanishUtils.isVanished(player)) {
-                        continue;
-                    }
-                    player.getOpenInventory();
+
                     for (Entry<String, Inventory> entry : keyToContentMapping.entrySet()) {
                         if (!isEmittingParticle.contains(entry.getKey())) {
                             if (entry.getValue().equals(player.getOpenInventory().getTopInventory())) {
                                 Location loc = BookshelfUtils.keyLoc(entry.getKey());
-                                Location loc2 = loc.clone().add(1, 1, 1);
-                                DustOptions purple = new DustOptions(Color.fromRGB(153, 51, 255), 1);
-                                DustOptions yellow = new DustOptions(Color.fromRGB(255, 255, 0), 1);
-                                for (Location pos : ParticlesUtils.getHollowCube(loc.add(-0.0625, -0.0625, -0.0625), loc2.add(0.0625, 0.0625, 0.0625), 0.1666)) {
-                                    double random = Math.random() * 100;
-                                    if (random > 95) {
-                                        double ranColor = Math.floor(Math.random() * 2) + 1;
-                                        if (ranColor == 1) {
-                                            loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, yellow);
-                                        } else if (ranColor == 2) {
-                                            loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, purple);
-                                        }
-                                    }
-                                }
+                                sendColoredParticle(loc, yellow, purple);
                                 isEmittingParticle.add(entry.getKey());
                             }
                         }
                     }
                     if (enchantmentTable) {
-                        if (player.getOpenInventory().getTopInventory().getType().equals(InventoryType.ENCHANTING)) {
-                            for (Block block : EnchantmentTableUtils.getBookshelves(player.getOpenInventory().getTopInventory().getLocation().getBlock())) {
-                                String key = BookshelfUtils.locKey(block.getLocation());
-                                if (!isEmittingParticle.contains(key)) {
-                                    Location loc = block.getLocation().clone();
-                                    Location loc2 = loc.clone().add(1, 1, 1);
-                                    DustOptions purple = new DustOptions(Color.fromRGB(204, 0, 204), 1);
-                                    DustOptions blue = new DustOptions(Color.fromRGB(51, 51, 255), 1);
-                                    for (Location pos : ParticlesUtils.getHollowCube(loc.add(-0.0625, -0.0625, -0.0625), loc2.add(0.0625, 0.0625, 0.0625), 0.1666)) {
-                                        double random = Math.random() * 100;
-                                        if (random > 95) {
-                                            double ranColor = Math.floor(Math.random() * 2) + 1;
-                                            if (ranColor == 1) {
-                                                loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, blue);
-                                            } else if (ranColor == 2) {
-                                                loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, purple);
-                                            }
-                                        }
-                                    }
-                                    isEmittingParticle.add(key);
-                                }
-                            }
-                            String key = BookshelfUtils.locKey(player.getOpenInventory().getTopInventory().getLocation());
-                            if (!isEmittingParticle.contains(key)) {
-                                Location pos = player.getOpenInventory().getTopInventory().getLocation().clone().add(0.5, 0.5, 0.5);
-                                pos.getWorld().spawnParticle(Particle.PORTAL, pos, 75);
-                                isEmittingParticle.add(key);
-                            }
-                        }
+                        sendEnchantmentTableParticles(player);
                     }
                 }
             }
         }, 0, 5);
+    }
+
+    private void sendEnchantmentTableParticles(Player player) {
+        if (player.getOpenInventory().getTopInventory().getType().equals(InventoryType.ENCHANTING)) {
+            Location location = player.getOpenInventory().getTopInventory().getLocation();
+
+            if (location == null) {
+                return;
+            }
+
+            List<Block> bookshelves = EnchantmentTableUtils.getBookshelves(location.getBlock());
+
+            for (Block block : bookshelves) {
+                String key = BookshelfUtils.locKey(block.getLocation());
+
+                if (!isEmittingParticle.contains(key)) {
+                    Location loc = block.getLocation().clone();
+                    sendColoredParticle(loc, blueEnchantment, purpleEnchantment);
+                    isEmittingParticle.add(key);
+                }
+            }
+
+            String key = BookshelfUtils.locKey(location);
+
+            if (!isEmittingParticle.contains(key)) {
+                Location pos = location.clone().add(0.5, 0.5, 0.5);
+
+                if (pos.getWorld() == null) {
+                    return;
+                }
+
+                pos.getWorld().spawnParticle(Particle.PORTAL, pos, 35);
+                isEmittingParticle.add(key);
+            }
+        }
+    }
+
+    private void sendColoredParticle(Location loc, DustOptions blueEnchantment, DustOptions purpleEnchantment) {
+        Location loc2 = loc.clone().add(1, 1, 1);
+
+        if (loc.getWorld() == null) {
+            return;
+        }
+
+        for (Location pos : ParticlesUtils.getHollowCube(loc.add(-0.0625, -0.0625, -0.0625), loc2.add(0.0625, 0.0625, 0.0625), 0.1666)) {
+            double random = Math.random() * 100;
+            if (random > 95) {
+                double ranColor = Math.floor(Math.random() * 2) + 1;
+                if (ranColor == 1) {
+                    loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, blueEnchantment);
+                } else if (ranColor == 2) {
+                    loc.getWorld().spawnParticle(Particle.REDSTONE, pos, 1, purpleEnchantment);
+                }
+            }
+        }
     }
 }
