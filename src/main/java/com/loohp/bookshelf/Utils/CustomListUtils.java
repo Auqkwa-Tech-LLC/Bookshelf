@@ -15,13 +15,21 @@ public class CustomListUtils<T> implements Iterable<T> {
         final ListIterator<T> i = original.listIterator(original.size());
 
         return new Iterator<T>() {
-            public boolean hasNext() { return i.hasPrevious(); }
-            public T next() { return i.previous(); }
-            public void remove() { i.remove(); }
+            public boolean hasNext() {
+                return i.hasPrevious();
+            }
+
+            public T next() {
+                return i.previous();
+            }
+
+            public void remove() {
+                i.remove();
+            }
         };
     }
 
     public static <T> CustomListUtils<T> reverse(List<T> original) {
-        return new CustomListUtils<T>(original);
+        return new CustomListUtils<>(original);
     }
 }

@@ -1,5 +1,7 @@
 package com.loohp.bookshelf.API.Events;
 
+import com.loohp.bookshelf.Bookshelf;
+import com.loohp.bookshelf.Utils.BookshelfUtils;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -7,48 +9,45 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 
-import com.loohp.bookshelf.Bookshelf;
-import com.loohp.bookshelf.Utils.BookshelfUtils;
+public class PlayerCloseBookshelfEvent extends Event {
 
-public class PlayerCloseBookshelfEvent extends Event{
-	
-	Player player;
-	Block block;
-	Location location;
-	String key;
-	Inventory inventory;
-	
-	public PlayerCloseBookshelfEvent (Player player, String key) {
-		this.player = player;
-		this.key = key;
-		this.location = BookshelfUtils.keyLoc(key);
-		this.block = location.getBlock();
-		this.inventory = Bookshelf.keyToContentMapping.get(key);
-	}
-	
-	public Player getPlayer() {
-		return player;
-	}
+    final Player player;
+    final Block block;
+    final Location location;
+    final String key;
+    final Inventory inventory;
 
-	public Block getBlock() {
-		return block;
-	}
+    public PlayerCloseBookshelfEvent(Player player, String key) {
+        this.player = player;
+        this.key = key;
+        this.location = BookshelfUtils.keyLoc(key);
+        this.block = location.getBlock();
+        this.inventory = Bookshelf.keyToContentMapping.get(key);
+    }
 
-	public Location getLocation() {
-		return location;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public Block getBlock() {
+        return block;
+    }
 
-	public Inventory getInventory() {
-		return inventory;
-	}
+    public Location getLocation() {
+        return location;
+    }
 
-	private static final HandlerList HANDLERS = new HandlerList();
+    public String getKey() {
+        return key;
+    }
 
-	@Override
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    private static final HandlerList HANDLERS = new HandlerList();
+
+    @Override
     public HandlerList getHandlers() {
         return HANDLERS;
     }

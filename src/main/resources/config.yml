@@ -1,5 +1,5 @@
 Options:
- #The number of rows for a bookshelf (Allows 1-6)
+  #The number of rows for a bookshelf (Allows 1-6)
   BookShelfRows: 2
 
   #Whether to use the item whitelist or not
@@ -8,11 +8,11 @@ Options:
   #Items which is allowed to be placed into a bookshelf
   #See this for item names: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
   Whitelist:
-   - BOOK
-   - WRITABLE_BOOK
-   - WRITTEN_BOOK
-   - ENCHANTED_BOOK
-   - KNOWLEDGE_BOOK
+    - BOOK
+    - WRITABLE_BOOK
+    - WRITTEN_BOOK
+    - ENCHANTED_BOOK
+    - KNOWLEDGE_BOOK
 
   #The default inventory name for an unnamed bookshelf
   Title: "Bookshelf"

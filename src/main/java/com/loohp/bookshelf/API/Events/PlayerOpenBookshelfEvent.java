@@ -1,5 +1,7 @@
 package com.loohp.bookshelf.API.Events;
 
+import com.loohp.bookshelf.Bookshelf;
+import com.loohp.bookshelf.Utils.BookshelfUtils;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -9,66 +11,63 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 
-import com.loohp.bookshelf.Bookshelf;
-import com.loohp.bookshelf.Utils.BookshelfUtils;
-
 public class PlayerOpenBookshelfEvent extends Event implements Cancellable {
-	
-	Player player;
-	Block block;
-	BlockFace blockface;
-	Location location;
-	String key;
-	Inventory inventory;
-	boolean cancelled;
-	
-	public PlayerOpenBookshelfEvent (Player player, String key, BlockFace blockface, boolean cancelled) {
-		this.player = player;
-		this.key = key;
-		this.location = BookshelfUtils.keyLoc(key);
-		this.block = location.getBlock();
-		this.blockface = blockface;
-		this.inventory = Bookshelf.keyToContentMapping.get(key);
-		this.cancelled = cancelled;
-	}
-	
-	public Player getPlayer() {
-		return player;
-	}
 
-	public Block getBlock() {
-		return block;
-	}
+    final Player player;
+    final Block block;
+    final BlockFace blockface;
+    final Location location;
+    final String key;
+    final Inventory inventory;
+    boolean cancelled;
 
-	public Location getLocation() {
-		return location;
-	}
+    public PlayerOpenBookshelfEvent(Player player, String key, BlockFace blockface, boolean cancelled) {
+        this.player = player;
+        this.key = key;
+        this.location = BookshelfUtils.keyLoc(key);
+        this.block = location.getBlock();
+        this.blockface = blockface;
+        this.inventory = Bookshelf.keyToContentMapping.get(key);
+        this.cancelled = cancelled;
+    }
 
-	public String getKey() {
-		return key;
-	}
-	
-	public BlockFace getClickedBlockFace() {
-		return blockface;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public Inventory getInventory() {
-		return inventory;
-	}
+    public Block getBlock() {
+        return block;
+    }
 
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
+    public Location getLocation() {
+        return location;
+    }
 
-	@Override
-	public void setCancelled(boolean cancelled) {
-		this.cancelled = cancelled;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	private static final HandlerList HANDLERS = new HandlerList();
+    public BlockFace getClickedBlockFace() {
+        return blockface;
+    }
 
-	@Override
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    private static final HandlerList HANDLERS = new HandlerList();
+
+    @Override
     public HandlerList getHandlers() {
         return HANDLERS;
     }
