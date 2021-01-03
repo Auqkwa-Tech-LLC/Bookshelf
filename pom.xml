@@ -256,9 +256,9 @@
 			<systemPath>${basedir}/lib/Towny-0.96.1.0.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>com.loohp</groupId>
+			<groupId>com.github.LOOHP</groupId>
 			<artifactId>InteractionVisualizer</artifactId>
-			<version>1.13.9</version>
+			<version>1.13.12</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
